@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Operations Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,52 +13,80 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
             min-height: 100vh;
-            padding: 20px;
+            color: #e2e8f0;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 40px 20px;
         }
 
         header {
             text-align: center;
-            color: white;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         h1 {
-            font-size: 2.5em;
+            font-size: 3.5em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            letter-spacing: -1.5px;
         }
 
         .subtitle {
-            font-size: 1.1em;
-            opacity: 0.9;
+            font-size: 1.15em;
+            color: #94a3b8;
+            font-weight: 400;
         }
 
-        .main-content {
+        .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
             margin-bottom: 30px;
         }
 
-        .input-section {
-            background: white;
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
 
-        .input-section h2 {
-            color: #667eea;
+        .card:hover {
+            border-color: rgba(148, 163, 184, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            font-size: 1.4em;
             margin-bottom: 20px;
-            font-size: 1.3em;
+            color: #60a5fa;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .input-group {
@@ -66,199 +95,273 @@
 
         label {
             display: block;
-            margin-bottom: 10px;
-            color: #333;
+            margin-bottom: 8px;
             font-weight: 600;
+            font-size: 0.95em;
+            color: #cbd5e1;
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 14px 16px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 10px;
             font-size: 1em;
-            transition: border-color 0.3s;
+            color: #e2e8f0;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input[type="text"]::placeholder {
+            color: #64748b;
         }
 
         input[type="text"]:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #60a5fa;
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
         }
 
         .examples {
-            margin-top: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 10px;
             padding: 15px;
-            background: #f5f5f5;
-            border-radius: 8px;
+            margin-top: 15px;
         }
 
-        .examples h4 {
-            color: #667eea;
-            margin-bottom: 10px;
+        .examples label {
+            margin-bottom: 12px;
             font-size: 0.9em;
         }
 
         .example-btn {
-            display: block;
+            display: flex;
             width: 100%;
-            padding: 10px;
+            padding: 12px 14px;
             margin: 8px 0;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 8px;
             cursor: pointer;
             text-align: left;
             font-size: 0.9em;
-            color: #333;
+            color: #cbd5e1;
             transition: all 0.3s;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
         }
 
         .example-btn:hover {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
+            background: rgba(96, 165, 250, 0.1);
+            border-color: #60a5fa;
+            color: #60a5fa;
+            transform: translateX(4px);
         }
 
         button.submit {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1em;
             font-weight: 600;
             cursor: pointer;
             margin-top: 20px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        button.submit:hover {
+        button.submit:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 15px 30px rgba(96, 165, 250, 0.3);
         }
 
         button.submit:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .pipeline-section {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-
-        .pipeline-section h2 {
-            color: #667eea;
-            margin-bottom: 30px;
-            font-size: 1.3em;
+            grid-column: 1 / -1;
         }
 
         .pipeline {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
             position: relative;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .pipeline::before {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
+            top: 50px;
+            left: 16.67%;
+            right: 16.67%;
             height: 2px;
-            background: #e0e0e0;
+            background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.3), transparent);
             z-index: 0;
         }
 
-        .agent {
+        .agent-step {
             display: flex;
             flex-direction: column;
             align-items: center;
             position: relative;
             z-index: 1;
-            flex: 1;
         }
 
-        .agent-icon {
-            width: 80px;
-            height: 80px;
+        .agent-circle {
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            background: white;
-            border: 3px solid #e0e0e0;
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid rgba(148, 163, 184, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2em;
+            font-size: 2.5em;
             margin-bottom: 15px;
-            transition: all 0.3s;
+            transition: all 0.5s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .agent.active .agent-icon {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #667eea;
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
-            animation: pulse 1.5s ease-in-out infinite;
+        .agent-circle::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            opacity: 0;
+            border-radius: 50%;
+            transition: opacity 0.5s;
         }
 
-        .agent.completed .agent-icon {
-            background: #4CAF50;
-            border-color: #4CAF50;
+        .agent-circle > * {
+            position: relative;
+            z-index: 1;
         }
 
-        @keyframes pulse {
+        .agent-step.active .agent-circle {
+            border-color: #60a5fa;
+            box-shadow: 0 0 30px rgba(96, 165, 250, 0.5);
+            animation: pulseAgent 1.5s ease-in-out infinite;
+        }
+
+        .agent-step.active .agent-circle::before {
+            opacity: 0.15;
+        }
+
+        .agent-step.completed .agent-circle {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .agent-step.completed .agent-circle::before {
+            opacity: 0;
+        }
+
+        @keyframes pulseAgent {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.08); }
         }
 
         .agent-name {
             font-weight: 600;
-            color: #333;
+            font-size: 1.1em;
             text-align: center;
-            font-size: 0.95em;
+            color: #cbd5e1;
+            margin-bottom: 5px;
         }
 
         .agent-status {
-            font-size: 0.8em;
-            color: #999;
-            margin-top: 8px;
+            font-size: 0.85em;
+            color: #64748b;
             text-align: center;
             min-height: 20px;
+            font-weight: 500;
         }
 
-        .agent.active .agent-status {
-            color: #667eea;
-            font-weight: 600;
+        .agent-step.active .agent-status {
+            color: #60a5fa;
         }
 
-        .agent.completed .agent-status {
-            color: #4CAF50;
+        .agent-step.completed .agent-status {
+            color: #10b981;
         }
 
         .results-section {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            margin-top: 30px;
+            grid-column: 1 / -1;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            font-family: inherit;
+            margin-bottom: -1px;
+        }
+
+        .tab-btn:hover {
+            color: #cbd5e1;
+        }
+
+        .tab-btn.active {
+            color: #60a5fa;
+            border-bottom-color: #60a5fa;
+        }
+
+        .tab-content {
             display: none;
+            animation: fadeIn 0.3s ease-out;
         }
 
-        .results-section.show {
+        .tab-content.active {
             display: block;
-            animation: slideUp 0.5s ease-out;
         }
 
-        @keyframes slideUp {
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -266,316 +369,299 @@
             }
         }
 
-        .results-section h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 1.3em;
-        }
-
-        .result-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .tab-btn {
-            padding: 12px 20px;
-            background: none;
-            border: none;
-            color: #999;
-            cursor: pointer;
-            font-weight: 600;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .tab-btn.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.show {
-            display: block;
-        }
-
-        .repo-item {
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+        .result-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 10px;
+            padding: 20px;
             margin-bottom: 15px;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
-        .repo-item:hover {
-            border-color: #667eea;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        .result-item:hover {
+            border-color: rgba(96, 165, 250, 0.5);
+            box-shadow: 0 10px 25px rgba(96, 165, 250, 0.1);
+            transform: translateY(-2px);
         }
 
-        .repo-name {
-            font-weight: 600;
-            color: #667eea;
+        .result-title {
+            font-size: 1.15em;
+            font-weight: 700;
+            color: #60a5fa;
             margin-bottom: 8px;
-        }
-
-        .repo-desc {
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-
-        .repo-stats {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-size: 0.85em;
+            gap: 10px;
         }
 
-        .stars {
-            color: #ff9800;
-            font-weight: 600;
+        .result-meta {
+            font-size: 0.9em;
+            color: #94a3b8;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
-        .repo-link {
-            color: #667eea;
+        .meta-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(96, 165, 250, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .result-description {
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .result-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .link-btn {
+            padding: 8px 14px;
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            border-radius: 6px;
+            color: #60a5fa;
             text-decoration: none;
-            font-weight: 600;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .repo-link:hover {
-            text-decoration: underline;
+        .link-btn:hover {
+            background: rgba(96, 165, 250, 0.2);
+            border-color: #60a5fa;
         }
 
         .weather-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
+            border: 1px solid rgba(96, 165, 250, 0.3);
             border-radius: 12px;
+            padding: 30px;
             text-align: center;
-        }
-
-        .weather-card h3 {
-            font-size: 1.2em;
-            margin-bottom: 15px;
-        }
-
-        .temp {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .condition {
-            font-size: 1.1em;
-            text-transform: capitalize;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
             margin-bottom: 20px;
         }
 
-        .status-badge.success {
-            background: #4CAF50;
-            color: white;
+        .weather-city {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #60a5fa;
+            margin-bottom: 10px;
         }
 
-        .status-badge.partial {
-            background: #ff9800;
-            color: white;
+        .weather-temp {
+            font-size: 3em;
+            font-weight: 800;
+            color: #e2e8f0;
+            margin-bottom: 10px;
         }
 
-        .status-badge.error {
-            background: #f44336;
-            color: white;
+        .weather-condition {
+            font-size: 1.1em;
+            color: #cbd5e1;
+            margin-bottom: 20px;
         }
 
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .weather-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .error-message {
-            color: #f44336;
+        .weather-detail {
+            background: rgba(15, 23, 42, 0.6);
             padding: 15px;
-            background: #ffebee;
             border-radius: 8px;
-            margin-top: 15px;
-            display: none;
         }
 
-        .error-message.show {
-            display: block;
+        .weather-detail-label {
+            font-size: 0.85em;
+            color: #94a3b8;
+            margin-bottom: 5px;
+        }
+
+        .weather-detail-value {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #60a5fa;
+        }
+
+        .log-item {
+            padding: 12px 15px;
+            background: rgba(15, 23, 42, 0.6);
+            border-left: 3px solid rgba(96, 165, 250, 0.3);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+
+        .log-item.success {
+            border-left-color: #10b981;
+            color: #10b981;
+        }
+
+        .log-item.error {
+            border-left-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .log-item.info {
+            border-left-color: #60a5fa;
+            color: #cbd5e1;
+        }
+
+        .summary-box {
+            background: rgba(96, 165, 250, 0.05);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            line-height: 1.7;
+            color: #cbd5e1;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94a3b8;
+        }
+
+        .no-results-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
         }
 
         @media (max-width: 768px) {
-            .main-content {
+            h1 {
+                font-size: 2.2em;
+            }
+
+            .main-grid {
                 grid-template-columns: 1fr;
             }
 
-            h1 {
-                font-size: 1.8em;
-            }
-
             .pipeline {
-                flex-direction: column;
+                grid-template-columns: 1fr;
+                gap: 40px;
             }
 
             .pipeline::before {
-                width: 2px;
-                height: 100%;
-                left: 50%;
-                top: 0;
-                right: auto;
-                bottom: 0;
+                display: none;
             }
 
-            .agent {
-                width: 100%;
-                margin: 20px 0;
+            .agent-circle {
+                width: 80px;
+                height: 80px;
+                font-size: 2em;
             }
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🤖 AI Operations Assistant</h1>
-            <p class="subtitle">Multi-Agent AI System with Real API Integrations</p>
+            <h1><i class="fas fa-brain"></i> AI Operations Assistant</h1>
+            <p class="subtitle">Multi-agent AI system with LLM-powered reasoning and real API integrations</p>
         </header>
 
-        <div class="main-content">
-            <!-- Input Section -->
-            <div class="input-section">
-                <h2>🎯 Your Query</h2>
+        <div class="main-grid">
+            <div class="card">
+                <h2><i class="fas fa-keyboard"></i> Query Input</h2>
                 <div class="input-group">
-                    <label for="query">What would you like to find?</label>
-                    <input 
-                        type="text" 
-                        id="query" 
-                        placeholder="e.g., Find AI repositories and Mumbai weather"
-                        value="Find top AI repositories and Bangalore weather"
-                    >
+                    <label for="query">What would you like to analyze?</label>
+                    <input type="text" id="query" placeholder="e.g., Find AI repositories and weather in Bangalore..." />
                 </div>
 
                 <div class="examples">
-                    <h4>💡 Try these examples:</h4>
-                    <button class="example-btn" onclick="setQuery('Find top AI GitHub repositories and Bangalore weather')">
-                        🤖 AI Repositories & Weather
+                    <label><i class="fas fa-lightbulb"></i> Quick Examples:</label>
+                    <button class="example-btn" onclick="setExample('Find top AI repositories')">
+                        <i class="fas fa-rocket"></i> AI Repositories
                     </button>
-                    <button class="example-btn" onclick="setQuery('Show Python trending repos and Delhi weather')">
-                        🐍 Python Repos & Delhi
+                    <button class="example-btn" onclick="setExample('Find web framework repositories and weather in San Francisco')">
+                        <i class="fas fa-cloud"></i> Frameworks & Weather
                     </button>
-                    <button class="example-btn" onclick="setQuery('Get machine learning projects and Mumbai weather')">
-                        🧠 ML Projects & Mumbai
+                    <button class="example-btn" onclick="setExample('Search for Python repositories and Bangalore weather')">
+                        <i class="fas fa-snake"></i> Python & Bangalore
                     </button>
-                    <button class="example-btn" onclick="setQuery('Search React framework and Hyderabad weather')">
-                        ⚛️ React & Hyderabad
+                    <button class="example-btn" onclick="setExample('Find machine learning tools and New York weather')">
+                        <i class="fas fa-robot"></i> ML Tools & NYC
                     </button>
                 </div>
 
-                <button class="submit" id="submitBtn" onclick="submitQuery()">
-                    <span id="submitText">🚀 Analyze</span>
+                <button class="submit" id="submitBtn" onclick="runQuery()">
+                    <i class="fas fa-play"></i> Analyze
                 </button>
-
-                <div class="error-message" id="errorMsg"></div>
             </div>
 
-            <!-- Pipeline Section -->
-            <div class="pipeline-section">
-                <h2>🔄 Processing Pipeline</h2>
+            <div class="card pipeline-section">
+                <h2><i class="fas fa-project-diagram"></i> Agent Pipeline</h2>
                 <div class="pipeline">
-                    <div class="agent" id="agent-planner">
-                        <div class="agent-icon">🧠</div>
+                    <div class="agent-step" id="agent-planner">
+                        <div class="agent-circle">🧠</div>
                         <div class="agent-name">Planner</div>
-                        <div class="agent-status">Waiting...</div>
+                        <div class="agent-status">Ready</div>
                     </div>
-                    <div class="agent" id="agent-executor">
-                        <div class="agent-icon">⚙️</div>
+                    <div class="agent-step" id="agent-executor">
+                        <div class="agent-circle">⚙️</div>
                         <div class="agent-name">Executor</div>
-                        <div class="agent-status">Waiting...</div>
+                        <div class="agent-status">Waiting</div>
                     </div>
-                    <div class="agent" id="agent-verifier">
-                        <div class="agent-icon">✅</div>
+                    <div class="agent-step" id="agent-verifier">
+                        <div class="agent-circle">✅</div>
                         <div class="agent-name">Verifier</div>
-                        <div class="agent-status">Waiting...</div>
+                        <div class="agent-status">Waiting</div>
                     </div>
-                </div>
-
-                <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-top: 30px;">
-                    <p style="color: #666; font-size: 0.9em; line-height: 1.6;">
-                        <strong>📊 How it works:</strong><br>
-                        1️⃣ <strong>Planner</strong> analyzes your request and creates a step-by-step plan<br>
-                        2️⃣ <strong>Executor</strong> runs the plan and calls real APIs (GitHub, Weather)<br>
-                        3️⃣ <strong>Verifier</strong> validates results and generates a summary
-                    </p>
                 </div>
             </div>
         </div>
 
-        <!-- Results Section -->
-        <div class="results-section" id="resultsSection">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2>📊 Results</h2>
-                <div class="status-badge" id="statusBadge">Processing...</div>
+        <div class="card results-section hidden" id="results-section">
+            <h2><i class="fas fa-chart-line"></i> Results</h2>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('github')">
+                    <i class="fas fa-github"></i> GitHub Repositories
+                </button>
+                <button class="tab-btn" onclick="switchTab('weather')">
+                    <i class="fas fa-cloud-sun"></i> Weather Information
+                </button>
+                <button class="tab-btn" onclick="switchTab('logs')">
+                    <i class="fas fa-list"></i> Execution Logs
+                </button>
+                <button class="tab-btn" onclick="switchTab('summary')">
+                    <i class="fas fa-file-alt"></i> Summary
+                </button>
             </div>
 
-            <div class="result-tabs">
-                <button class="tab-btn active" onclick="switchTab('github')">🔍 GitHub Results</button>
-                <button class="tab-btn" onclick="switchTab('weather')">🌤️ Weather Results</button>
-                <button class="tab-btn" onclick="switchTab('logs')">📋 Execution Log</button>
-            </div>
-
-            <div id="github" class="tab-content show">
-                <div id="githubContent"></div>
-            </div>
-
-            <div id="weather" class="tab-content">
-                <div id="weatherContent"></div>
-            </div>
-
-            <div id="logs" class="tab-content">
-                <div id="logsContent"></div>
-            </div>
+            <div id="github" class="tab-content active"></div>
+            <div id="weather" class="tab-content"></div>
+            <div id="logs" class="tab-content"></div>
+            <div id="summary" class="tab-content"></div>
         </div>
     </div>
 
     <script>
-        function setQuery(text) {
+        function setExample(text) {
             document.getElementById('query').value = text;
-        }
-
-        function switchTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('show');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            // Show selected tab
-            document.getElementById(tabName).classList.add('show');
-            event.target.classList.add('active');
+            document.getElementById('query').focus();
         }
 
         function updateAgentStatus(agentId, status, isActive = false, isCompleted = false) {
@@ -588,146 +674,166 @@
             if (isCompleted) agent.classList.add('completed');
         }
 
-        async function submitQuery() {
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function runQuery() {
             const query = document.getElementById('query').value.trim();
             if (!query) {
-                showError('Please enter a query');
+                alert('Please enter a query');
                 return;
             }
 
-            // Reset UI
-            document.getElementById('errorMsg').classList.remove('show');
-            resetPipeline();
-            document.getElementById('resultsSection').classList.remove('show');
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner spinner"></i> Processing...';
 
-            const submitBtn = document.getElementById('submitBtn');
-            const submitText = document.getElementById('submitText');
-            submitBtn.disabled = true;
-            submitText.innerHTML = '<span class="loading"></span> Processing...';
+            // Reset agents
+            updateAgentStatus('agent-planner', 'Planning...', true);
+            updateAgentStatus('agent-executor', 'Waiting', false);
+            updateAgentStatus('agent-verifier', 'Waiting', false);
 
             try {
-                // Step 1: Planner
-                updateAgentStatus('agent-planner', 'Planning...', true);
+                // Simulate planner delay
+                await new Promise(r => setTimeout(r, 800));
+                updateAgentStatus('agent-planner', 'Completed', false, true);
+                updateAgentStatus('agent-executor', 'Executing...', true);
 
-                // Step 2: Executor
-                setTimeout(() => {
-                    updateAgentStatus('agent-planner', 'Completed', false, true);
-                    updateAgentStatus('agent-executor', 'Executing...', true);
-                }, 800);
-
-                // Step 3: Verifier
-                setTimeout(() => {
-                    updateAgentStatus('agent-executor', 'Completed', false, true);
-                    updateAgentStatus('agent-verifier', 'Verifying...', true);
-                }, 1600);
+                // Simulate executor delay
+                await new Promise(r => setTimeout(r, 1200));
 
                 // Make API call
-                const response = await fetch(`/run?query=${encodeURIComponent(query)}`);
-                
+                const response = await fetch(`/run?query=${encodeURIComponent(query)}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
 
-                // Complete verification
+                // Update verifier
+                updateAgentStatus('agent-executor', 'Completed', false, true);
+                updateAgentStatus('agent-verifier', 'Verifying...', true);
+
+                await new Promise(r => setTimeout(r, 600));
                 updateAgentStatus('agent-verifier', 'Completed', false, true);
 
                 // Display results
                 displayResults(data);
-
-                document.getElementById('resultsSection').classList.add('show');
+                document.getElementById('results-section').classList.remove('hidden');
 
             } catch (error) {
-                console.error('Error:', error);
-                showError('Failed to process query. Please try again.');
-                resetPipeline();
+                alert('Error: ' + error.message);
+                updateAgentStatus('agent-planner', 'Ready', false);
+                updateAgentStatus('agent-executor', 'Waiting', false);
+                updateAgentStatus('agent-verifier', 'Waiting', false);
             } finally {
-                submitBtn.disabled = false;
-                submitText.innerHTML = '🚀 Analyze';
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-play"></i> Analyze';
             }
-        }
-
-        function resetPipeline() {
-            updateAgentStatus('agent-planner', 'Waiting...');
-            updateAgentStatus('agent-executor', 'Waiting...');
-            updateAgentStatus('agent-verifier', 'Waiting...');
-        }
-
-        function showError(message) {
-            const errorEl = document.getElementById('errorMsg');
-            errorEl.textContent = message;
-            errorEl.classList.add('show');
         }
 
         function displayResults(data) {
-            const statusBadge = document.getElementById('statusBadge');
-            if (data.verified) {
-                statusBadge.className = 'status-badge success';
-                statusBadge.textContent = '✅ Complete';
-            } else {
-                statusBadge.className = 'status-badge partial';
-                statusBadge.textContent = '⚠️ Partial';
-            }
-
+            // Get the actual data structure (could be results.github or github_results)
+            const githubData = data.results?.github || data.github_results || [];
+            const weatherData = data.results?.weather || data.weather_results || [];
+            
             // GitHub Results
-            const githubContent = document.getElementById('githubContent');
-            if (data.results.github && data.results.github.length > 0) {
-                githubContent.innerHTML = data.results.github.map((repo, i) => `
-                    <div class="repo-item">
-                        <div class="repo-name">${i + 1}. ${repo.name}</div>
-                        <div class="repo-desc">${repo.description || 'No description'}</div>
-                        <div class="repo-stats">
-                            <span class="stars">⭐ ${repo.stars.toLocaleString()} stars</span>
-                            <a href="${repo.url}" target="_blank" class="repo-link">View on GitHub →</a>
+            const githubDiv = document.getElementById('github');
+            if (githubData && githubData.length > 0) {
+                githubDiv.innerHTML = githubData.map(repo => `
+                    <div class="result-item">
+                        <div class="result-title">
+                            <i class="fas fa-book"></i> ${repo.name}
+                        </div>
+                        <div class="result-meta">
+                            <div class="meta-badge">
+                                <i class="fas fa-star" style="color: #fbbf24;"></i> ${repo.stars} stars
+                            </div>
+                        </div>
+                        <div class="result-description">${repo.description || 'No description available'}</div>
+                        <div class="result-links">
+                            <a href="${repo.url}" target="_blank" class="link-btn">
+                                <i class="fas fa-external-link-alt"></i> View Repository
+                            </a>
                         </div>
                     </div>
                 `).join('');
             } else {
-                githubContent.innerHTML = '<p style="color: #999;">No GitHub results</p>';
+                githubDiv.innerHTML = '<div class="no-results"><div class="no-results-icon">📦</div><p>No repositories found</p></div>';
             }
 
             // Weather Results
-            const weatherContent = document.getElementById('weatherContent');
-            if (data.results.weather) {
-                const w = data.results.weather;
-                weatherContent.innerHTML = `
-                    <div class="weather-card">
-                        <h3>🌍 ${w.city}</h3>
-                        <div class="temp">${w.temperature_c}°C</div>
-                        <div class="condition">${w.condition}</div>
-                        ${w.humidity ? `<p style="margin-top: 15px;">Humidity: ${w.humidity}% | Wind: ${w.wind_speed_ms} m/s</p>` : ''}
-                    </div>
-                `;
+            const weatherDiv = document.getElementById('weather');
+            if (weatherData) {
+                // Handle both array and single object
+                const weatherArray = Array.isArray(weatherData) ? weatherData : [weatherData];
+                if (weatherArray.length > 0 && weatherArray[0].city) {
+                    weatherDiv.innerHTML = weatherArray.map(w => `
+                        <div class="weather-card">
+                            <div class="weather-city"><i class="fas fa-map-marker-alt"></i> ${w.city}</div>
+                            <div class="weather-temp">${w.temperature_c}°C</div>
+                            <div class="weather-condition"><i class="fas fa-cloud"></i> ${w.condition}</div>
+                            <div class="weather-details">
+                                <div class="weather-detail">
+                                    <div class="weather-detail-label">Feels Like</div>
+                                    <div class="weather-detail-value">${w.feels_like_c}°C</div>
+                                </div>
+                                <div class="weather-detail">
+                                    <div class="weather-detail-label">Humidity</div>
+                                    <div class="weather-detail-value">${w.humidity}%</div>
+                                </div>
+                                <div class="weather-detail">
+                                    <div class="weather-detail-label">Wind Speed</div>
+                                    <div class="weather-detail-value">${w.wind_speed_ms} m/s</div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    weatherDiv.innerHTML = '<div class="no-results"><div class="no-results-icon">🌤️</div><p>No weather data available</p></div>';
+                }
             } else {
-                weatherContent.innerHTML = '<p style="color: #999;">No weather data available</p>';
+                weatherDiv.innerHTML = '<div class="no-results"><div class="no-results-icon">🌤️</div><p>No weather data available</p></div>';
             }
 
-            // Execution Log
-            const logsContent = document.getElementById('logsContent');
-            logsContent.innerHTML = `
-                <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
-                    <p style="color: #333; font-family: monospace; line-height: 1.8;">
-                        ${data.execution_log.map(log => {
-                            const icon = log.status === 'success' ? '✅' : '❌';
-                            const color = log.status === 'success' ? '#4CAF50' : '#f44336';
-                            return `<span style="color: ${color};">${icon} ${log.tool}: ${log.status}</span>`;
-                        }).join('<br>')}
-                    </p>
-                </div>
-                ${data.summary ? `<p style="margin-top: 20px; color: #666; line-height: 1.6;"><strong>Summary:</strong><br>${data.summary}</p>` : ''}
-            `;
+            // Execution Logs
+            const logsDiv = document.getElementById('logs');
+            if (data.execution_log && data.execution_log.length > 0) {
+                logsDiv.innerHTML = data.execution_log.map(log => {
+                    // Handle both string and object logs
+                    const logStr = typeof log === 'string' ? log : (log.message || JSON.stringify(log));
+                    const type = logStr.includes('✓') || logStr.includes('successfully') ? 'success' : 
+                                logStr.includes('error') || logStr.includes('Error') ? 'error' : 'info';
+                    return `<div class="log-item ${type}">${logStr}</div>`;
+                }).join('');
+            } else {
+                logsDiv.innerHTML = '<div class="no-results"><div class="no-results-icon">📋</div><p>No logs available</p></div>';
+            }
+
+            // Summary
+            const summaryDiv = document.getElementById('summary');
+            if (data.summary) {
+                summaryDiv.innerHTML = `<div class="summary-box">${data.summary}</div>`;
+            } else {
+                summaryDiv.innerHTML = '<div class="no-results"><div class="no-results-icon">📝</div><p>No summary available</p></div>';
+            }
         }
 
         // Allow Enter key to submit
-        document.getElementById('query').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                submitQuery();
-            }
+        document.getElementById('query').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') runQuery();
         });
-
-        // Initialize
-        console.log('AI Operations Assistant UI Loaded');
     </script>
 </body>
 </html>

@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Operations Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            padding: 0 20px;
+        }
+
+        header {
+            text-align: center;
+            margin: 40px 0;
+            padding: 30px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .input-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .input-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .examples {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .examples h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .example-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.9em;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        .example-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        button.submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button.submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button.submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pipeline-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .pipeline-section h2 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 1.3em;
+        }
+
+        .pipeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .pipeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+
+        .agent {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+        }
+
+        .agent-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .agent.active .agent-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .agent.completed .agent-icon {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .agent-name {
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            font-size: 0.95em;
+        }
+
+        .agent-status {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 8px;
+            text-align: center;
+            min-height: 20px;
+        }
+
+        .agent.active .agent-status {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .agent.completed .agent-status {
+            color: #4CAF50;
+        }
+
+        .results-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .result-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.show {
+            display: block;
+        }
+
+        .repo-item {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .repo-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .repo-name {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .repo-desc {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .repo-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85em;
+        }
+
+        .stars {
+            color: #ff9800;
+            font-weight: 600;
+        }
+
+        .repo-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .repo-link:hover {
+            text-decoration: underline;
+        }
+
+        .weather-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .weather-card h3 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .temp {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .condition {
+            font-size: 1.1em;
+            text-transform: capitalize;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .status-badge.success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status-badge.partial {
+            background: #ff9800;
+            color: white;
+        }
+
+        .status-badge.error {
+            background: #f44336;
+            color: white;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: #f44336;
+            padding: 15px;
+            background: #ffebee;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .pipeline {
+                flex-direction: column;
+            }
+
+            .pipeline::before {
+                width: 2px;
+                height: 100%;
+                left: 50%;
+                top: 0;
+                right: auto;
+                bottom: 0;
+            }
+
+            .agent {
+                width: 100%;
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 AI Operations Assistant</h1>
+            <p class="subtitle">Multi-Agent AI System with Real API Integrations</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Input Section -->
+            <div class="input-section">
+                <h2>🎯 Your Query</h2>
+                <div class="input-group">
+                    <label for="query">What would you like to find?</label>
+                    <input 
+                        type="text" 
+                        id="query" 
+                        placeholder="e.g., Find AI repositories and Mumbai weather"
+                        value="Find top AI repositories and Bangalore weather"
+                    >
+                </div>
+
+                <div class="examples">
+                    <h4>💡 Try these examples:</h4>
+                    <button class="example-btn" onclick="setQuery('Find top AI GitHub repositories and Bangalore weather')">
+                        🤖 AI Repositories & Weather
+                    </button>
+                    <button class="example-btn" onclick="setQuery('Show Python trending repos and Delhi weather')">
+                        🐍 Python Repos & Delhi
+                    </button>
+                    <button class="example-btn" onclick="setQuery('Get machine learning projects and Mumbai weather')">
+                        🧠 ML Projects & Mumbai
+                    </button>
+                    <button class="example-btn" onclick="setQuery('Search React framework and Hyderabad weather')">
+                        ⚛️ React & Hyderabad
+                    </button>
+                </div>
+
+                <button class="submit" id="submitBtn" onclick="submitQuery()">
+                    <span id="submitText">🚀 Analyze</span>
+                </button>
+
+                <div class="error-message" id="errorMsg"></div>
+            </div>
+
+            <!-- Pipeline Section -->
+            <div class="pipeline-section">
+                <h2>🔄 Processing Pipeline</h2>
+                <div class="pipeline">
+                    <div class="agent" id="agent-planner">
+                        <div class="agent-icon">🧠</div>
+                        <div class="agent-name">Planner</div>
+                        <div class="agent-status">Waiting...</div>
+                    </div>
+                    <div class="agent" id="agent-executor">
+                        <div class="agent-icon">⚙️</div>
+                        <div class="agent-name">Executor</div>
+                        <div class="agent-status">Waiting...</div>
+                    </div>
+                    <div class="agent" id="agent-verifier">
+                        <div class="agent-icon">✅</div>
+                        <div class="agent-name">Verifier</div>
+                        <div class="agent-status">Waiting...</div>
+                    </div>
+                </div>
+
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-top: 30px;">
+                    <p style="color: #666; font-size: 0.9em; line-height: 1.6;">
+                        <strong>📊 How it works:</strong><br>
+                        1️⃣ <strong>Planner</strong> analyzes your request and creates a step-by-step plan<br>
+                        2️⃣ <strong>Executor</strong> runs the plan and calls real APIs (GitHub, Weather)<br>
+                        3️⃣ <strong>Verifier</strong> validates results and generates a summary
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>📊 Results</h2>
+                <div class="status-badge" id="statusBadge">Processing...</div>
+            </div>
+
+            <div class="result-tabs">
+                <button class="tab-btn active" onclick="switchTab('github')">🔍 GitHub Results</button>
+                <button class="tab-btn" onclick="switchTab('weather')">🌤️ Weather Results</button>
+                <button class="tab-btn" onclick="switchTab('logs')">📋 Execution Log</button>
+            </div>
+
+            <div id="github" class="tab-content show">
+                <div id="githubContent"></div>
+            </div>
+
+            <div id="weather" class="tab-content">
+                <div id="weatherContent"></div>
+            </div>
+
+            <div id="logs" class="tab-content">
+                <div id="logsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setQuery(text) {
+            document.getElementById('query').value = text;
+        }
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('show');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('show');
+            event.target.classList.add('active');
+        }
+
+        function updateAgentStatus(agentId, status, isActive = false, isCompleted = false) {
+            const agent = document.getElementById(agentId);
+            const statusEl = agent.querySelector('.agent-status');
+            statusEl.textContent = status;
+            
+            agent.classList.remove('active', 'completed');
+            if (isActive) agent.classList.add('active');
+            if (isCompleted) agent.classList.add('completed');
+        }
+
+        async function submitQuery() {
+            const query = document.getElementById('query').value.trim();
+            if (!query) {
+                showError('Please enter a query');
+                return;
+            }
+
+            // Reset UI
+            document.getElementById('errorMsg').classList.remove('show');
+            resetPipeline();
+            document.getElementById('resultsSection').classList.remove('show');
+
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            submitBtn.disabled = true;
+            submitText.innerHTML = '<span class="loading"></span> Processing...';
+
+            try {
+                // Step 1: Planner
+                updateAgentStatus('agent-planner', 'Planning...', true);
+
+                // Step 2: Executor
+                setTimeout(() => {
+                    updateAgentStatus('agent-planner', 'Completed', false, true);
+                    updateAgentStatus('agent-executor', 'Executing...', true);
+                }, 800);
+
+                // Step 3: Verifier
+                setTimeout(() => {
+                    updateAgentStatus('agent-executor', 'Completed', false, true);
+                    updateAgentStatus('agent-verifier', 'Verifying...', true);
+                }, 1600);
+
+                // Make API call
+                const response = await fetch(`/run?query=${encodeURIComponent(query)}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Complete verification
+                updateAgentStatus('agent-verifier', 'Completed', false, true);
+
+                // Display results
+                displayResults(data);
+
+                document.getElementById('resultsSection').classList.add('show');
+
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Failed to process query. Please try again.');
+                resetPipeline();
+            } finally {
+                submitBtn.disabled = false;
+                submitText.innerHTML = '🚀 Analyze';
+            }
+        }
+
+        function resetPipeline() {
+            updateAgentStatus('agent-planner', 'Waiting...');
+            updateAgentStatus('agent-executor', 'Waiting...');
+            updateAgentStatus('agent-verifier', 'Waiting...');
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMsg');
+            errorEl.textContent = message;
+            errorEl.classList.add('show');
+        }
+
+        function displayResults(data) {
+            const statusBadge = document.getElementById('statusBadge');
+            if (data.verified) {
+                statusBadge.className = 'status-badge success';
+                statusBadge.textContent = '✅ Complete';
+            } else {
+                statusBadge.className = 'status-badge partial';
+                statusBadge.textContent = '⚠️ Partial';
+            }
+
+            // GitHub Results
+            const githubContent = document.getElementById('githubContent');
+            if (data.results.github && data.results.github.length > 0) {
+                githubContent.innerHTML = data.results.github.map((repo, i) => `
+                    <div class="repo-item">
+                        <div class="repo-name">${i + 1}. ${repo.name}</div>
+                        <div class="repo-desc">${repo.description || 'No description'}</div>
+                        <div class="repo-stats">
+                            <span class="stars">⭐ ${repo.stars.toLocaleString()} stars</span>
+                            <a href="${repo.url}" target="_blank" class="repo-link">View on GitHub →</a>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                githubContent.innerHTML = '<p style="color: #999;">No GitHub results</p>';
+            }
+
+            // Weather Results
+            const weatherContent = document.getElementById('weatherContent');
+            if (data.results.weather) {
+                const w = data.results.weather;
+                weatherContent.innerHTML = `
+                    <div class="weather-card">
+                        <h3>🌍 ${w.city}</h3>
+                        <div class="temp">${w.temperature_c}°C</div>
+                        <div class="condition">${w.condition}</div>
+                        ${w.humidity ? `<p style="margin-top: 15px;">Humidity: ${w.humidity}% | Wind: ${w.wind_speed_ms} m/s</p>` : ''}
+                    </div>
+                `;
+            } else {
+                weatherContent.innerHTML = '<p style="color: #999;">No weather data available</p>';
+            }
+
+            // Execution Log
+            const logsContent = document.getElementById('logsContent');
+            logsContent.innerHTML = `
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+                    <p style="color: #333; font-family: monospace; line-height: 1.8;">
+                        ${data.execution_log.map(log => {
+                            const icon = log.status === 'success' ? '✅' : '❌';
+                            const color = log.status === 'success' ? '#4CAF50' : '#f44336';
+                            return `<span style="color: ${color};">${icon} ${log.tool}: ${log.status}</span>`;
+                        }).join('<br>')}
+                    </p>
+                </div>
+                ${data.summary ? `<p style="margin-top: 20px; color: #666; line-height: 1.6;"><strong>Summary:</strong><br>${data.summary}</p>` : ''}
+            `;
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('query').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitQuery();
+            }
+        });
+
+        // Initialize
+        console.log('AI Operations Assistant UI Loaded');
+    </script>
+</body>
+</html>
