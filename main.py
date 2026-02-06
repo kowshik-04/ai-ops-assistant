@@ -1,7 +1,10 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from agents.planner import PlannerAgent
 from agents.executor import ExecutorAgent
 from agents.verifier import VerifierAgent
+import os
 
 app = FastAPI(
     title="AI Operations Assistant",
@@ -15,17 +18,22 @@ verifier = VerifierAgent()
 
 @app.get("/")
 def root():
-    """Health check and API information"""
+    """Serve the UI"""
+    return FileResponse("index.html")
+
+@app.get("/health")
+def health():
+    """Health check endpoint"""
     return {
         "status": "operational",
         "service": "AI Operations Assistant",
         "version": "1.0.0",
         "endpoints": {
-            "run": "POST /run?query=<your_query>",
+            "ui": "GET /",
+            "api": "POST /run?query=<your_query>",
             "docs": "/docs",
-            "health": "/"
-        },
-        "example": "POST /run?query=Find top AI repositories and Bangalore weather"
+            "health": "/health"
+        }
     }
 
 @app.post("/run")
@@ -43,3 +51,4 @@ def run_task(query: str):
     results, log = executor.execute(plan)
     final_output = verifier.verify(query, results, log)
     return final_output
+
