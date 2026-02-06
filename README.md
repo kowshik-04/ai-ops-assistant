@@ -224,10 +224,3 @@ curl -X POST "http://localhost:8000/run?query=Find AI repos and Bangalore weathe
 - **Why Three Agents?** Clear separation: think (plan), do (execute), check (verify)
 - **Why Retry Logic?** Production-ready resilience against transient failures
 
-## 📝 License
-
-MIT License - Feel free to use for learning and projects.
-
----
-
-**Built with ❤️ for demonstrating agent-based AI systems**
