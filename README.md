@@ -74,11 +74,23 @@ OPENWEATHER_API_KEY=your-actual-key
 uvicorn main:app --reload
 ```
 
-The API will be available at: `http://localhost:8000`
+The system will be available at: `http://localhost:8000`
 
-### Making Requests
+### 🎨 Beautiful Interactive UI
 
-**Using curl:**
+Open your browser to **http://localhost:8000/** and you'll see:
+
+- **Input Section**: Enter natural language queries or use example prompts
+- **Pipeline Visualization**: Watch the three agents work in real-time:
+  - 🧠 **Planner** - Creates execution plan
+  - ⚙️ **Executor** - Calls APIs and retrieves data  
+  - ✅ **Verifier** - Validates and summarizes results
+- **Results Display**: View GitHub repositories, weather data, and execution logs in organized tabs
+- **Real-time Status**: See which agent is processing, animations show progress
+
+### 🖥️ Making API Requests
+
+Alternatively, use REST API directly:
 ```bash
 curl -X POST "http://localhost:8000/run?query=Find%20top%20AI%20repositories%20and%20Bangalore%20weather"
 ```
@@ -150,11 +162,49 @@ ai-ops-assistant/
 ├── schemas/               # Pydantic schemas
 │   ├── __init__.py
 │   └── plan_schema.py     # Structured plan schema
+├── index.html             # 🎨 Beautiful interactive UI
 ├── main.py                # FastAPI application entry point
 ├── requirements.txt       # Python dependencies
 ├── .env.example          # Environment variable template
 └── README.md             # This file
 ```
+
+## 🎨 User Interface Features
+
+The included `index.html` provides a professional web UI with:
+
+### Design & UX
+- Modern gradient design with smooth animations
+- Responsive layout (desktop and mobile)
+- Real-time status updates with color-coded agents
+- Tab-based results display
+
+### Agent Pipeline Visualization
+```
+    🧠 Planner  ────→  ⚙️ Executor  ────→  ✅ Verifier
+    (Waiting)          (Waiting)           (Waiting)
+        ↓                  ↓                   ↓
+   (Analyzing)         (Executing)        (Verifying)
+        ↓                  ↓                   ↓
+    (Completed)         (Completed)        (Completed)
+```
+
+- Each agent shows live status
+- Animations show which agent is currently active
+- Green checkmarks appear when completed
+
+### Results Display
+- **GitHub Tab**: Repository cards with stars, description, and links
+- **Weather Tab**: Beautiful weather card with temperature and conditions
+- **Logs Tab**: Execution log showing tool status and final summary
+
+### Example Prompts
+Four pre-built queries demonstrate the system:
+1. "Find top AI GitHub repositories and Bangalore weather"
+2. "Show Python trending repos and Delhi weather"
+3. "Get machine learning projects and Mumbai weather"
+4. "Search React framework and Hyderabad weather"
+
 
 ## 🌐 Integrated APIs
 
