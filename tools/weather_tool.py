@@ -10,7 +10,6 @@ class WeatherTool:
         self.retry_delay = 1
 
     def get_weather(self, city: str):
-        """Get current weather with retry logic"""
         if not self.api_key:
             raise Exception("OPENWEATHER_API_KEY not configured")
         

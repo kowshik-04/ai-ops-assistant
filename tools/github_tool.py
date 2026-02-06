@@ -10,7 +10,6 @@ class GitHubTool:
         self.retry_delay = 1
 
     def search_repositories(self, query: str, limit: int = 3):
-        """Search GitHub repositories with retry logic"""
         headers = {}
         if self.token:
             headers["Authorization"] = f"Bearer {self.token}"

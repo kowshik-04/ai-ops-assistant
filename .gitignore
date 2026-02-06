@@ -2,3 +2,10 @@ venv/
 .env
 __pycache__/
 *.pyc
+
+Deployment_summary.md
+submissionchecklist.md
+UI_IMPLEMENTATION.md
+testing_guide.md
+quick_reference.md
+index_old.html

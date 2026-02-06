@@ -18,12 +18,10 @@ verifier = VerifierAgent()
 
 @app.get("/")
 def root():
-    """Serve the UI"""
     return FileResponse("index.html")
 
 @app.get("/health")
 def health():
-    """Health check endpoint"""
     return {
         "status": "operational",
         "service": "AI Operations Assistant",
@@ -38,15 +36,6 @@ def health():
 
 @app.post("/run")
 def run_task(query: str):
-    """
-    Execute a natural language task using multi-agent system
-    
-    Args:
-        query: Natural language query (e.g., "Find AI repos and Mumbai weather")
-    
-    Returns:
-        Structured JSON with results from GitHub and Weather APIs
-    """
     plan = planner.create_plan(query)
     results, log = executor.execute(plan)
     final_output = verifier.verify(query, results, log)

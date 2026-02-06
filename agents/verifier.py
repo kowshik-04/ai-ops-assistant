@@ -31,17 +31,11 @@ class VerifierAgent:
         }
     
     def _generate_summary(self, user_query: str, results: dict, verified: bool) -> str:
-        """Generate a human-readable summary using LLM"""
         if not verified:
             return "Incomplete execution: Some data sources failed to respond."
         
-        system_prompt = """
-You are a Verifier Agent. Generate a concise, professional summary of the results.
-Output ONLY valid JSON with a single key "summary" containing the text.
-
-Format:
-{"summary": "your summary here"}
-"""
+        system_prompt = """You are a Verifier Agent. Generate a concise summary.
+    Output JSON: {"summary": "your summary"}"""
         
         user_prompt = f"""
 User Query: {user_query}
